@@ -55,12 +55,26 @@ button:hover{background:#f1f0eb;}
 .p-baixa{background:#EAF3DE;color:#3B6D11;}
 .cat-badge{background:#f1f0eb;color:#666;}
 .date-badge{font-size:10px;color:#aaa;}
-.card-actions{display:flex;gap:3px;margin-top:5px;}
+.card-actions{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap;}
 .card-btn{font-size:10px;padding:2px 6px;cursor:pointer;border:0.5px solid #ddd;border-radius:3px;background:transparent;color:#666;}
 .card-btn:hover{background:#f1f0eb;}
 .card-btn.del:hover{color:#A32D2D;border-color:#A32D2D;}
+.card-btn.edit:hover{color:#185FA5;border-color:#185FA5;}
 .empty-col{font-size:11px;color:#bbb;text-align:center;padding:10px 0;}
 .loading-bar{text-align:center;font-size:12px;color:#888;padding:0.8rem;}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:100;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:12px;padding:1.5rem;width:100%;max-width:420px;margin:1rem;}
+.modal h3{font-size:15px;font-weight:500;margin-bottom:1.2rem;color:#1a1a18;}
+.modal-field{margin-bottom:1rem;}
+.modal-field label{display:block;font-size:12px;color:#666;margin-bottom:4px;}
+.modal-field input[type=text],.modal-field input[type=date]{width:100%;font-size:13px;padding:8px 10px;border:0.5px solid #ccc;border-radius:8px;background:#fff;}
+.modal-field select{width:100%;font-size:13px;padding:8px 10px;border:0.5px solid #ccc;border-radius:8px;background:#fff;cursor:pointer;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.4rem;}
+.btn-save{background:#1a1a18;color:#fff;border-color:#1a1a18;font-size:13px;padding:8px 18px;}
+.btn-save:hover{background:#333;border-color:#333;}
+.btn-cancel{font-size:13px;padding:8px 14px;}
 @media(max-width:600px){.kanban{grid-template-columns:1fr 1fr;}.stats-row{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:360px){.kanban{grid-template-columns:1fr;}}
 </style>
@@ -136,6 +150,38 @@ button:hover{background:#f1f0eb;}
   </div>
 </div>
 
+<!-- Modal de edição -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <h3>Editar tarefa</h3>
+    <div class="modal-field">
+      <label>Título</label>
+      <input type="text" id="edit-title" placeholder="Título da tarefa"/>
+    </div>
+    <div class="modal-field">
+      <label>Data</label>
+      <input type="date" id="edit-date"/>
+    </div>
+    <div class="modal-field">
+      <label>Prioridade</label>
+      <select id="edit-priority">
+        <option value="">Sem prioridade</option>
+        <option value="alta">Alta</option>
+        <option value="media">Média</option>
+        <option value="baixa">Baixa</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Categoria</label>
+      <input type="text" id="edit-category" placeholder="Ex: Trabalho, Casa, Saúde..."/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-save" onclick="salvarEdicao()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const CLIENT_ID = '1066728571322-s75qo7i98v1ents71ao8gkdnfk0t3jnf.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
@@ -144,7 +190,7 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 
 let tokenClient, gapiInited=false, gisInited=false;
 let tasks=[], nextId=1, driveFileId=null;
-let saveTimeout=null;
+let saveTimeout=null, editingId=null;
 
 const todayStr=()=>new Date().toISOString().slice(0,10);
 const soonLimit=()=>{const d=new Date();d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);};
@@ -160,10 +206,8 @@ function getCol(t){
 }
 
 function syncStatus(state,msg){
-  const dot=document.getElementById('sync-dot');
-  const txt=document.getElementById('sync-text');
-  dot.style.background=state==='ok'?'#639922':state==='saving'?'#BA7517':'#E24B4A';
-  txt.textContent=msg;
+  document.getElementById('sync-dot').style.background=state==='ok'?'#639922':state==='saving'?'#BA7517':'#E24B4A';
+  document.getElementById('sync-text').textContent=msg;
 }
 
 function showMsg(msg){
@@ -174,15 +218,13 @@ function showMsg(msg){
 function gapiLoaded(){
   gapi.load('client',async()=>{
     await gapi.client.init({discoveryDocs:[DISCOVERY_DOC]});
-    gapiInited=true;
-    maybeEnable();
+    gapiInited=true;maybeEnable();
   });
 }
 
 function gisLoaded(){
   tokenClient=google.accounts.oauth2.initTokenClient({
-    client_id:CLIENT_ID,
-    scope:SCOPES,
+    client_id:CLIENT_ID,scope:SCOPES,
     callback:async(resp)=>{
       if(resp.error){syncStatus('error','Erro no login');return;}
       localStorage.setItem('gapi_token',JSON.stringify(gapi.client.getToken()));
@@ -191,8 +233,7 @@ function gisLoaded(){
       await loadFromDrive();
     }
   });
-  gisInited=true;
-  maybeEnable();
+  gisInited=true;maybeEnable();
 }
 
 function maybeEnable(){
@@ -208,9 +249,7 @@ function maybeEnable(){
   }
 }
 
-function iniciarLogin(){
-  tokenClient.requestAccessToken({prompt:''});
-}
+function iniciarLogin(){tokenClient.requestAccessToken({prompt:''});}
 
 function logout(){
   const token=gapi.client.getToken();
@@ -223,22 +262,14 @@ function logout(){
 }
 
 async function findOrCreateFile(){
-  const resp=await gapi.client.drive.files.list({
-    q:`name='${FILE_NAME}' and trashed=false`,
-    fields:'files(id,name)',spaces:'drive'
-  });
+  const resp=await gapi.client.drive.files.list({q:`name='${FILE_NAME}' and trashed=false`,fields:'files(id,name)',spaces:'drive'});
   const files=resp.result.files;
   if(files&&files.length>0){driveFileId=files[0].id;return;}
   const boundary='kanban_boundary_xyz';
   const meta=JSON.stringify({name:FILE_NAME,mimeType:'application/json'});
   const body=JSON.stringify({tasks:[],nextId:1});
   const multipart=`--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${boundary}--`;
-  const r=await gapi.client.request({
-    path:'https://www.googleapis.com/upload/drive/v3/files',
-    method:'POST',params:{uploadType:'multipart'},
-    headers:{'Content-Type':`multipart/related; boundary="${boundary}"`},
-    body:multipart
-  });
+  const r=await gapi.client.request({path:'https://www.googleapis.com/upload/drive/v3/files',method:'POST',params:{uploadType:'multipart'},headers:{'Content-Type':`multipart/related; boundary="${boundary}"`},body:multipart});
   driveFileId=r.result.id;
 }
 
@@ -248,14 +279,10 @@ async function loadFromDrive(){
     await findOrCreateFile();
     const resp=await gapi.client.drive.files.get({fileId:driveFileId,alt:'media'});
     const data=typeof resp.result==='string'?JSON.parse(resp.result):resp.result;
-    tasks=data.tasks||[];
-    nextId=data.nextId||1;
+    tasks=data.tasks||[];nextId=data.nextId||1;
     const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    syncStatus('ok','Sincronizado às '+now);
-    render();
-  }catch(e){
-    syncStatus('error','Erro ao carregar — tente atualizar');
-  }
+    syncStatus('ok','Sincronizado às '+now);render();
+  }catch(e){syncStatus('error','Erro ao carregar — tente atualizar');}
 }
 
 async function saveToDrive(){
@@ -263,21 +290,12 @@ async function saveToDrive(){
   syncStatus('saving','Salvando...');
   try{
     const boundary='kanban_boundary_xyz';
-    const meta=JSON.stringify({name:FILE_NAME});
-    const body=JSON.stringify({tasks,nextId});
-    const multipart=`--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${boundary}--`;
-    await gapi.client.request({
-      path:`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}`,
-      method:'PATCH',params:{uploadType:'multipart'},
-      headers:{'Content-Type':`multipart/related; boundary="${boundary}"`},
-      body:multipart
-    });
+    const multipart=`--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({name:FILE_NAME})}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({tasks,nextId})}\r\n--${boundary}--`;
+    await gapi.client.request({path:`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}`,method:'PATCH',params:{uploadType:'multipart'},headers:{'Content-Type':`multipart/related; boundary="${boundary}"`},body:multipart});
     localStorage.setItem('gapi_token',JSON.stringify(gapi.client.getToken()));
     const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     syncStatus('ok','Salvo às '+now);
-  }catch(e){
-    syncStatus('error','Erro ao salvar');
-  }
+  }catch(e){syncStatus('error','Erro ao salvar');}
 }
 
 function scheduleSave(){clearTimeout(saveTimeout);saveTimeout=setTimeout(()=>saveToDrive(),1200);}
@@ -286,6 +304,7 @@ function forceLoad(){loadFromDrive();}
 
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('task-input').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
+  document.getElementById('edit-title').addEventListener('keydown',e=>{if(e.key==='Enter')salvarEdicao();});
 });
 
 function addTask(){
@@ -308,6 +327,40 @@ function removeTask(id){
   scheduleSave();render();
 }
 
+// --- EDIÇÃO ---
+function abrirEdicao(id){
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  editingId=id;
+  document.getElementById('edit-title').value=t.title;
+  document.getElementById('edit-date').value=t.date||'';
+  document.getElementById('edit-priority').value=t.priority||'';
+  document.getElementById('edit-category').value=t.category||'';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('edit-title').focus(),50);
+}
+
+function fecharModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId=null;
+}
+
+function closeModal(e){
+  if(e.target===document.getElementById('modal-overlay'))fecharModal();
+}
+
+function salvarEdicao(){
+  const t=tasks.find(t=>t.id===editingId);if(!t)return;
+  const titulo=document.getElementById('edit-title').value.trim();
+  if(!titulo){document.getElementById('edit-title').focus();return;}
+  t.title=titulo;
+  t.date=document.getElementById('edit-date').value||null;
+  t.priority=document.getElementById('edit-priority').value||null;
+  t.category=document.getElementById('edit-category').value.trim()||null;
+  fecharModal();
+  scheduleSave();render();
+  showMsg('Tarefa atualizada!');
+}
+
 function formatDate(d){if(!d)return'';const[y,m,day]=d.split('-');return day+'/'+m+'/'+y;}
 
 function makeCard(t){
@@ -323,7 +376,8 @@ function makeCard(t){
     </div>
     <div class="card-actions">
       <button class="card-btn" onclick="toggleDone(${t.id})">${t.done?'↩ Reabrir':'✓ Concluir'}</button>
-      <button class="card-btn del" onclick="removeTask(${t.id})">✕ Remover</button>
+      <button class="card-btn edit" onclick="abrirEdicao(${t.id})">✎ Editar</button>
+      <button class="card-btn del" onclick="removeTask(${t.id})">✕</button>
     </div>`;
   return div;
 }
