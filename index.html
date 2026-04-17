@@ -216,7 +216,7 @@ const CID='1066728571322-s75qo7i98v1ents71ao8gkdnfk0t3jnf.apps.googleusercontent
 const SCOPES='https://www.googleapis.com/auth/drive.file';
 const FN='tarefas_kanban_ia.json';
 const DISC='https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-const API_URL='https://api.anthropic.com/v1/messages';
+const WORKER='https://gestor-tarefas-ia.hildernandiosousa.workers.dev';
 
 let tc,gI=false,gsI=false;
 let tasks=[],nId=1,fId=null,svT=null,eid=null;
@@ -248,7 +248,6 @@ function sm(msg,load=false){
   if(!load&&msg)mt=setTimeout(()=>{document.getElementById('smsg').textContent='';},5000);
 }
 
-/* AUTH */
 function gapiLoaded(){
   gapi.load('client',async()=>{
     await gapi.client.init({discoveryDocs:[DISC]});
@@ -282,7 +281,6 @@ function logout(){
   document.getElementById('app').style.display='none';
 }
 
-/* DRIVE */
 async function et(){
   return new Promise(r=>{
     const t=gapi.client.getToken();
@@ -336,45 +334,32 @@ function schSave(){clearTimeout(svT);svT=setTimeout(()=>save(),1500);}
 function forceSave(){save();}
 function forceLoad(){load();}
 
-/* IA — usa proxy via Claude artifact API (sem CORS) */
 async function chamarIA(prompt){
-  const resp=await fetch(API_URL,{
+  const resp=await fetch(WORKER,{
     method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'anthropic-version':'2023-06-01',
-      'anthropic-dangerous-direct-browser-access':'true'
-    },
+    headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       model:'claude-haiku-4-5-20251001',
-      max_tokens:800,
+      max_tokens:600,
       messages:[{role:'user',content:prompt}]
     })
   });
-  if(!resp.ok){
-    const err=await resp.text();
-    throw new Error(`HTTP ${resp.status}: ${err}`);
-  }
+  if(!resp.ok)throw new Error('Worker HTTP '+resp.status);
   const data=await resp.json();
+  if(data.error)throw new Error(data.error);
   const txt=data.content?.map(b=>b.text||'').join('')||'';
-  // Extrai JSON mesmo que venha com markdown
   const match=txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-  if(!match)throw new Error('Resposta não é JSON: '+txt.slice(0,100));
+  if(!match)throw new Error('JSON não encontrado');
   return JSON.parse(match[0]);
 }
 
 async function classificar(t){
   try{
     const res=await chamarIA(
-      `Você é especialista em gestão do tempo para engenheiros e gestores de obras de construção civil/petróleo. ` +
-      `Analise a tarefa e retorne APENAS um objeto JSON sem markdown, sem explicação:\n` +
-      `{"priority":"alta"|"media"|"baixa","category":"<categoria curta pt-BR ex: Qualidade, Obras, Equipe, Pessoal, Estudos, Compras>","quad":"Q1"|"Q2"|"Q3"|"Q4","suggestion":"<ação recomendada em 1 frase>","delegate":"<quem poderia assumir se Q3, senão null>"}\n\n` +
-      `Critérios:\n` +
-      `Q1=Urgente+Importante (prazo hoje/amanhã, não conformidade, risco à segurança ou cliente)\n` +
-      `Q2=NãoUrgente+Importante (planejamento, estudos, revisões programadas, melhorias)\n` +
-      `Q3=Urgente+NãoImportante (tarefas operacionais que outro pode fazer, compras simples)\n` +
-      `Q4=NãoUrgente+NãoImportante (pode ser eliminado ou postergado)\n\n` +
-      `Tarefa: "${t.title}"${t.date?' (prazo: '+t.date+')':''}`
+      `Especialista em gestão do tempo para engenheiros/gestores de obras. Retorne APENAS JSON sem markdown:\n`+
+      `{"priority":"alta"|"media"|"baixa","category":"<Qualidade|Obras|Equipe|Pessoal|Estudos|Compras|Planejamento>","quad":"Q1"|"Q2"|"Q3"|"Q4","suggestion":"<ação em 1 frase>","delegate":"<quem assumiria se Q3, senão null>"}\n\n`+
+      `Q1=Urgente+Importante|Q2=NãoUrgente+Importante|Q3=Urgente+NãoImportante|Q4=NãoUrgente+NãoImportante\n\n`+
+      `Tarefa: "${t.title}"${t.date?' (prazo:'+t.date+')':''}`
     );
     t.priority=res.priority||'media';
     t.category=res.category||null;
@@ -382,10 +367,9 @@ async function classificar(t){
     t.suggestion=res.suggestion||null;
     t.delegate=res.delegate||null;
   }catch(e){
-    console.error('IA erro:',e.message);
-    // Classificação padrão se IA falhar
+    console.error('IA:',e.message);
     t.priority='media';t.quad='Q2';
-    t.suggestion='Verifique manualmente a classificação desta tarefa.';
+    t.suggestion='Classificar manualmente.';
   }
 }
 
@@ -398,28 +382,22 @@ async function addTask(){
   document.getElementById('ti').value='';
   document.getElementById('td').value='';
   render();
-  sm('IA classificando tarefa...', true);
+  sm('IA classificando...', true);
   await classificar(nova);
-  sm('');
-  render();schSave();
+  sm('');render();schSave();
 }
 
 async function repriorizar(){
   const p=tasks.filter(t=>!t.done);
   if(!p.length){sm('Nenhuma tarefa pendente!');return;}
-  sm('IA reclassificando todas as tarefas...', true);
-  // Classifica em paralelo com limite de concorrência
-  const chunks=[];
-  for(let i=0;i<p.length;i+=3)chunks.push(p.slice(i,i+3));
-  for(const chunk of chunks){
-    await Promise.all(chunk.map(t=>classificar(t)));
+  sm('Reclassificando todas as tarefas...', true);
+  for(let i=0;i<p.length;i+=3){
+    await Promise.all(p.slice(i,i+3).map(t=>classificar(t)));
     render();
   }
-  sm('Reclassificação concluída!');
-  schSave();render();
+  sm('Concluído!');schSave();render();
 }
 
-/* TASKS */
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('ti').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
   document.getElementById('et').addEventListener('keydown',e=>{if(e.key==='Enter')svedit();});
@@ -427,7 +405,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 function done(id){const t=tasks.find(t=>t.id===id);if(t)t.done=!t.done;schSave();render();}
 function rm(id){tasks=tasks.filter(t=>t.id!==id);schSave();render();}
 
-/* EDIÇÃO */
 function oed(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;eid=id;
   document.getElementById('et').value=t.title;
@@ -445,10 +422,9 @@ function svedit(){
   t.title=v;t.date=document.getElementById('ed').value||null;
   t.priority=document.getElementById('ep').value||null;
   t.category=document.getElementById('ec').value.trim()||null;
-  fmo();schSave();render();sm('Tarefa atualizada!');
+  fmo();schSave();render();sm('Atualizado!');
 }
 
-/* RENDER */
 function mkCard(t){
   const d=document.createElement('div');
   d.className='card'+(t.done?' done':'');
@@ -495,7 +471,6 @@ function render(){
   const pct=tot>0?Math.round(dn/tot*100):0;
   document.getElementById('prog').style.width=pct+'%';
   document.getElementById('ppct').textContent=pct+'%';
-
   const cols={l:[],h:[],s:[],f:[]};const dCards=[];
   tasks.forEach(t=>{if(t.done){dCards.push(t);return;}const c=col(t);if(cols[c])cols[c].push(t);});
   const ord={alta:0,media:1,baixa:2};
@@ -507,7 +482,6 @@ function render(){
     if(!all.length){const e=document.createElement('div');e.className='ecol';e.textContent='Vazio';el.appendChild(e);}
     else all.forEach(t=>el.appendChild(mkCard(t)));
   });
-
   const qs={Q1:[],Q2:[],Q3:[],Q4:[]};
   tasks.filter(t=>!t.done).forEach(t=>{if(t.quad&&qs[t.quad])qs[t.quad].push(t);});
   [{q:'Q1',bi:'e1',ci:'e1c'},{q:'Q2',bi:'e2',ci:'e2c'},{q:'Q3',bi:'e3',ci:'e3c'},{q:'Q4',bi:'e4',ci:'e4c'}].forEach(({q,bi,ci})=>{
