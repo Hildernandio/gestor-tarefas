@@ -14,8 +14,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-/* NAV */
 .navbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;height:54px;position:sticky;top:0;z-index:50;gap:12px;}
 .nav-logo{font-size:15px;font-weight:600;letter-spacing:-0.3px;}
 .nav-logo span{color:var(--text3);}
@@ -26,8 +24,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
 .nav-out{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text3);cursor:pointer;margin-left:8px;}
 .nav-out:hover{background:var(--surface2);}
-
-/* LOGIN */
 .login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;}
 .lcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:2.5rem;text-align:center;max-width:360px;width:100%;box-shadow:var(--sh);}
 .licon{width:46px;height:46px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem;}
@@ -37,11 +33,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .gbtn{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #dadce0;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:500;color:#3c4043;cursor:pointer;width:100%;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
 .gbtn:hover{box-shadow:0 2px 6px rgba(0,0,0,0.12);}
 .lnote{font-size:11px;color:var(--text3);margin-top:.8rem;}
-
-/* MAIN */
 .main{padding:1.2rem 1.5rem;max-width:1140px;margin:0 auto;}
-
-/* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.1rem;}
 .sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;box-shadow:var(--sh);}
 .sl{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
@@ -52,8 +44,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px;}
 .prog-bg{height:5px;background:var(--surface2);border-radius:20px;overflow:hidden;}
 .prog-fill{height:100%;background:var(--green);border-radius:20px;transition:width .5s;}
-
-/* ADD */
 .add-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem;margin-bottom:1.2rem;box-shadow:var(--sh);}
 .add-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
 .add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
@@ -67,26 +57,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tools{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
 .tbtn{flex:1;min-width:110px;font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);cursor:pointer;font-weight:500;text-align:center;}
 .tbtn:hover{background:var(--border);}
-
-/* STATUS */
 .sbar{font-size:12px;color:var(--text3);text-align:center;min-height:18px;margin-bottom:.7rem;display:flex;align-items:center;justify-content:center;gap:6px;}
 .spin{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--text3);border-radius:50%;animation:sp .7s linear infinite;display:none;}
 .spin.on{display:block;}
 @keyframes sp{to{transform:rotate(360deg);}}
-
-/* SECÇÃO */
-.sec-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;}
-
-/* KANBAN */
-.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.6rem;}
+.sec-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem;}
 .col{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);}
 .col-h{padding:9px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);}
 .cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .cname{font-size:12px;font-weight:600;flex:1;}
 .cnum{font-size:10px;background:var(--surface2);color:var(--text3);border-radius:20px;padding:1px 7px;font-weight:700;}
 .col-b{padding:7px;display:flex;flex-direction:column;gap:5px;min-height:55px;}
-
-/* CARD */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 9px 7px;}
 .card:hover{box-shadow:0 2px 7px rgba(0,0,0,0.07);}
 .card.done{opacity:.33;}
@@ -108,10 +90,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cb:hover{background:var(--surface2);}
 .cb.r:hover{color:var(--red);border-color:var(--red-bg);}
 .cb.b:hover{color:var(--blue);border-color:var(--blue-bg);}
-.ecol{font-size:11px;color:var(--text3);text-align:center;padding:12px 6px;}
-
-/* EISENHOWER */
-.ei-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ecol{font-size:11px;color:var(--text3);text-align:center;padding:14px 6px;}
+.ei-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2rem;}
 .quad{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);}
 .qh{padding:10px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .qbadge{width:25px;height:25px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
@@ -126,9 +106,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .qb{padding:7px;display:flex;flex-direction:column;gap:5px;min-height:65px;}
 .ecard{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 9px 7px;}
 .etit{font-size:12px;line-height:1.4;margin-bottom:4px;}
-.ehint{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:4px;line-height:1.4;}
-
-/* MODAL */
+.ehint{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:4px;line-height:1.4;border-left:2px solid var(--border);padding-left:6px;}
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;padding:1rem;}
 .mo.open{display:flex;}
 .mdl{background:var(--surface);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:400px;box-shadow:0 8px 30px rgba(0,0,0,.15);}
@@ -138,7 +116,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fld input,.fld select{width:100%;font-size:13px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);outline:none;}
 .fld input:focus,.fld select:focus{border-color:#999;}
 .mact{display:flex;gap:8px;justify-content:flex-end;margin-top:1.2rem;}
-
 @media(max-width:720px){
   .kanban,.ei-grid{grid-template-columns:1fr 1fr;}
   .stats-row{grid-template-columns:repeat(2,1fr);}
@@ -152,12 +129,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="lp" class="login-page">
   <div class="lcard">
     <div class="licon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
     <h1>Gestor de Tarefas</h1>
-    <p>Kanban inteligente + Matriz de Eisenhower, sincronizado em todos os seus dispositivos.</p>
+    <p>Kanban inteligente + Matriz de Eisenhower, sincronizado em todos os dispositivos.</p>
     <button class="gbtn" onclick="iniciarLogin()">
       <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Entrar com Google
@@ -166,19 +142,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- APP -->
 <div id="app" style="display:none;">
   <nav class="navbar">
     <span class="nav-logo">Gestor <span>Tarefas</span></span>
-    <div class="nav-sync">
-      <div class="sdot" id="sdot"></div>
-      <span id="stxt">—</span>
-    </div>
+    <div class="nav-sync"><div class="sdot" id="sdot"></div><span id="stxt">—</span></div>
     <button class="nav-out" onclick="logout()">Sair</button>
   </nav>
 
   <div class="main">
-    <!-- STATS -->
     <div class="stats-row">
       <div class="sc"><div class="sl">Total</div><div class="sv" id="s-tot">0</div></div>
       <div class="sc red"><div class="sl">Atrasadas</div><div class="sv" id="s-lat">0</div></div>
@@ -190,7 +161,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="prog-bg"><div class="prog-fill" id="prog" style="width:0%"></div></div>
     </div>
 
-    <!-- ADD -->
     <div class="add-box">
       <div class="add-lbl">Nova tarefa</div>
       <div class="add-row">
@@ -207,16 +177,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <div class="sbar"><div class="spin" id="spin"></div><span id="smsg"></span></div>
 
-    <!-- KANBAN -->
     <div class="sec-title">Kanban — por prazo</div>
-    <div class="kanban" style="margin-bottom:2rem;">
+    <div class="kanban">
       <div class="col"><div class="col-h"><div class="cdot" style="background:#e24b4a;"></div><span class="cname">Atrasado</span><span class="cnum" id="kl">0</span></div><div class="col-b" id="cl"></div></div>
       <div class="col"><div class="col-h"><div class="cdot" style="background:#ba7517;"></div><span class="cname">Hoje</span><span class="cnum" id="kh">0</span></div><div class="col-b" id="ch"></div></div>
       <div class="col"><div class="col-h"><div class="cdot" style="background:#378add;"></div><span class="cname">Curto prazo</span><span class="cnum" id="ks">0</span></div><div class="col-b" id="cs"></div></div>
       <div class="col"><div class="col-h"><div class="cdot" style="background:#888;"></div><span class="cname">Futuro</span><span class="cnum" id="kf">0</span></div><div class="col-b" id="cf"></div></div>
     </div>
 
-    <!-- EISENHOWER -->
     <div class="sec-title">Matriz de Eisenhower — por importância e urgência</div>
     <div class="ei-grid">
       <div class="quad q1"><div class="qh"><div class="qbadge">Q1</div><div class="qinfo"><div class="qtit">Fazer Agora</div><div class="qsub">Urgente + Importante</div></div><span class="qcnt" id="e1c">0</span></div><div class="qb" id="e1"></div></div>
@@ -227,7 +195,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="mo" id="mo" onclick="cmo(event)">
   <div class="mdl">
     <h3>Editar tarefa</h3>
@@ -249,18 +216,19 @@ const CID='1066728571322-s75qo7i98v1ents71ao8gkdnfk0t3jnf.apps.googleusercontent
 const SCOPES='https://www.googleapis.com/auth/drive.file';
 const FN='tarefas_kanban_ia.json';
 const DISC='https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+const API_URL='https://api.anthropic.com/v1/messages';
 
 let tc,gI=false,gsI=false;
 let tasks=[],nId=1,fId=null,svT=null,eid=null;
 
-const td=()=>new Date().toISOString().slice(0,10);
+const tds=()=>new Date().toISOString().slice(0,10);
 const sl=()=>{const d=new Date();d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);};
 const fd=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}`;};
 
 function col(t){
   if(t.done)return null;
   if(!t.date)return'f';
-  const n=td();
+  const n=tds();
   if(t.date<n)return'l';
   if(t.date===n)return'h';
   if(t.date<=sl())return's';
@@ -277,7 +245,7 @@ function sm(msg,load=false){
   clearTimeout(mt);
   document.getElementById('smsg').textContent=msg;
   document.getElementById('spin').className='spin'+(load?' on':'');
-  if(!load&&msg)mt=setTimeout(()=>{document.getElementById('smsg').textContent='';},4000);
+  if(!load&&msg)mt=setTimeout(()=>{document.getElementById('smsg').textContent='';},5000);
 }
 
 /* AUTH */
@@ -368,25 +336,57 @@ function schSave(){clearTimeout(svT);svT=setTimeout(()=>save(),1500);}
 function forceSave(){save();}
 function forceLoad(){load();}
 
-/* IA — usa fetch direto para api.anthropic.com (funciona em GitHub Pages com CORS habilitado) */
-async function ia(prompt){
-  const r=await fetch('https://api.anthropic.com/v1/messages',{
+/* IA — usa proxy via Claude artifact API (sem CORS) */
+async function chamarIA(prompt){
+  const resp=await fetch(API_URL,{
     method:'POST',
-    headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:600,messages:[{role:'user',content:prompt}]})
+    headers:{
+      'Content-Type':'application/json',
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-haiku-4-5-20251001',
+      max_tokens:800,
+      messages:[{role:'user',content:prompt}]
+    })
   });
-  if(!r.ok)throw new Error(r.status);
-  const d=await r.json();
-  return d.content?.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+  if(!resp.ok){
+    const err=await resp.text();
+    throw new Error(`HTTP ${resp.status}: ${err}`);
+  }
+  const data=await resp.json();
+  const txt=data.content?.map(b=>b.text||'').join('')||'';
+  // Extrai JSON mesmo que venha com markdown
+  const match=txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+  if(!match)throw new Error('Resposta não é JSON: '+txt.slice(0,100));
+  return JSON.parse(match[0]);
 }
 
 async function classificar(t){
   try{
-    const txt=await ia(`Você é especialista em gestão do tempo para engenheiros e gestores de obras. Analise a tarefa e retorne APENAS JSON sem markdown:\n{"priority":"alta"|"media"|"baixa","category":"<categoria curta pt-BR, ex: Obras, Qualidade, Equipe, Pessoal, Estudos>","quad":"Q1"|"Q2"|"Q3"|"Q4","suggestion":"<ação em 1 frase curta>","delegate":"<quem/o que poderia assumir se Q3, senão null>"}\n\nQ1=Urgente+Importante | Q2=NãoUrgente+Importante | Q3=Urgente+NãoImportante | Q4=NãoUrgente+NãoImportante\n\nTarefa: "${t.title}"${t.date?' (prazo: '+t.date+')':''}`);
-    const res=JSON.parse(txt);
-    t.priority=res.priority||null;t.category=res.category||null;
-    t.quad=res.quad||null;t.suggestion=res.suggestion||null;t.delegate=res.delegate||null;
-  }catch(e){console.warn('IA:',e);}
+    const res=await chamarIA(
+      `Você é especialista em gestão do tempo para engenheiros e gestores de obras de construção civil/petróleo. ` +
+      `Analise a tarefa e retorne APENAS um objeto JSON sem markdown, sem explicação:\n` +
+      `{"priority":"alta"|"media"|"baixa","category":"<categoria curta pt-BR ex: Qualidade, Obras, Equipe, Pessoal, Estudos, Compras>","quad":"Q1"|"Q2"|"Q3"|"Q4","suggestion":"<ação recomendada em 1 frase>","delegate":"<quem poderia assumir se Q3, senão null>"}\n\n` +
+      `Critérios:\n` +
+      `Q1=Urgente+Importante (prazo hoje/amanhã, não conformidade, risco à segurança ou cliente)\n` +
+      `Q2=NãoUrgente+Importante (planejamento, estudos, revisões programadas, melhorias)\n` +
+      `Q3=Urgente+NãoImportante (tarefas operacionais que outro pode fazer, compras simples)\n` +
+      `Q4=NãoUrgente+NãoImportante (pode ser eliminado ou postergado)\n\n` +
+      `Tarefa: "${t.title}"${t.date?' (prazo: '+t.date+')':''}`
+    );
+    t.priority=res.priority||'media';
+    t.category=res.category||null;
+    t.quad=res.quad||'Q2';
+    t.suggestion=res.suggestion||null;
+    t.delegate=res.delegate||null;
+  }catch(e){
+    console.error('IA erro:',e.message);
+    // Classificação padrão se IA falhar
+    t.priority='media';t.quad='Q2';
+    t.suggestion='Verifique manualmente a classificação desta tarefa.';
+  }
 }
 
 async function addTask(){
@@ -398,7 +398,7 @@ async function addTask(){
   document.getElementById('ti').value='';
   document.getElementById('td').value='';
   render();
-  sm('IA classificando a tarefa...', true);
+  sm('IA classificando tarefa...', true);
   await classificar(nova);
   sm('');
   render();schSave();
@@ -407,14 +407,16 @@ async function addTask(){
 async function repriorizar(){
   const p=tasks.filter(t=>!t.done);
   if(!p.length){sm('Nenhuma tarefa pendente!');return;}
-  sm('IA reclassificando todas...', true);
-  try{
-    const txt=await ia(`Especialista em gestão do tempo para engenheiros/gestores de obras. Retorne APENAS JSON sem markdown:\n[{"id":<n>,"priority":"alta"|"media"|"baixa","category":"<categoria pt-BR>","quad":"Q1"|"Q2"|"Q3"|"Q4","suggestion":"<ação curta>","delegate":"<quem se Q3 senão null>"}]\nQ1=Urgente+Importante|Q2=NãoUrgente+Importante|Q3=Urgente+NãoImportante|Q4=NãoUrgente+NãoImportante\n\n${p.map(t=>`id ${t.id}: ${t.title}${t.date?' (prazo:'+t.date+')':''}${t.category?' ['+t.category+']':''}`).join('\n')}`);
-    const res=JSON.parse(txt);
-    res.forEach(x=>{const t=tasks.find(t=>t.id===x.id);if(t){t.priority=x.priority;t.category=x.category;t.quad=x.quad;t.suggestion=x.suggestion;t.delegate=x.delegate;}});
-    schSave();sm('Reclassificação concluída!');
-  }catch(e){sm('Erro ao contatar a IA.');}
-  render();
+  sm('IA reclassificando todas as tarefas...', true);
+  // Classifica em paralelo com limite de concorrência
+  const chunks=[];
+  for(let i=0;i<p.length;i+=3)chunks.push(p.slice(i,i+3));
+  for(const chunk of chunks){
+    await Promise.all(chunk.map(t=>classificar(t)));
+    render();
+  }
+  sm('Reclassificação concluída!');
+  schSave();render();
 }
 
 /* TASKS */
@@ -451,13 +453,12 @@ function mkCard(t){
   const d=document.createElement('div');
   d.className='card'+(t.done?' done':'');
   const pl={alta:'Alta',media:'Média',baixa:'Baixa'}[t.priority]||'';
-  const ql=t.quad?`<span class="tag ${t.quad.toLowerCase()}">${t.quad}</span>`:'';
   d.innerHTML=`<p class="ctit">${t.title}</p>
     <div class="ctags">
       ${t.priority?`<span class="tag ${t.priority}">${pl}</span>`:''}
       ${t.category?`<span class="tag cat">${t.category}</span>`:''}
       ${t.date?`<span class="tag dt">📅 ${fd(t.date)}</span>`:''}
-      ${ql}
+      ${t.quad?`<span class="tag ${t.quad.toLowerCase()}">${t.quad}</span>`:''}
     </div>
     <div class="cact">
       <button class="cb" onclick="done(${t.id})">${t.done?'↩':'✓'}</button>
@@ -471,7 +472,7 @@ function mkECard(t){
   const pl={alta:'Alta',media:'Média',baixa:'Baixa'}[t.priority]||'';
   const hint=[t.suggestion,t.delegate?'Delegar: '+t.delegate:null].filter(Boolean).join(' · ');
   d.innerHTML=`<p class="etit">${t.title}</p>
-    ${hint?`<p class="ehint">→ ${hint}</p>`:''}
+    ${hint?`<p class="ehint">${hint}</p>`:''}
     <div class="ctags">
       ${t.priority?`<span class="tag ${t.priority}">${pl}</span>`:''}
       ${t.category?`<span class="tag cat">${t.category}</span>`:''}
@@ -495,7 +496,6 @@ function render(){
   document.getElementById('prog').style.width=pct+'%';
   document.getElementById('ppct').textContent=pct+'%';
 
-  // KANBAN
   const cols={l:[],h:[],s:[],f:[]};const dCards=[];
   tasks.forEach(t=>{if(t.done){dCards.push(t);return;}const c=col(t);if(cols[c])cols[c].push(t);});
   const ord={alta:0,media:1,baixa:2};
@@ -508,7 +508,6 @@ function render(){
     else all.forEach(t=>el.appendChild(mkCard(t)));
   });
 
-  // EISENHOWER
   const qs={Q1:[],Q2:[],Q3:[],Q4:[]};
   tasks.filter(t=>!t.done).forEach(t=>{if(t.quad&&qs[t.quad])qs[t.quad].push(t);});
   [{q:'Q1',bi:'e1',ci:'e1c'},{q:'Q2',bi:'e2',ci:'e2c'},{q:'Q3',bi:'e3',ci:'e3c'},{q:'Q4',bi:'e4',ci:'e4c'}].forEach(({q,bi,ci})=>{
