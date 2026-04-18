@@ -48,20 +48,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tag.media{background:var(--amber-bg);color:var(--amber);}
 .tag.baixa{background:var(--green-bg);color:var(--green);}
 
-/* MATRIZ DE 4 QUADRANTES */
 .ei-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.quad{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);min-height:180px;}
+.quad{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);min-height:180px; display:flex; flex-direction:column;}
 .qh{padding:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .qbadge{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;}
+.qb{padding:5px; flex-grow:1;}
+
 .q1 .qbadge{background:var(--red-bg);color:var(--red);}
 .q2 .qbadge{background:var(--blue-bg);color:var(--blue);}
 .q3 .qbadge{background:var(--amber-bg);color:var(--amber);}
 .q4 .qbadge{background:var(--surface2);color:var(--text3);}
 
-/* MODAL DE EDIÇÃO */
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;padding:1rem;}
 .mo.open{display:flex;}
-.mdl{background:var(--surface);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:400px;}
+.mdl{background:var(--surface);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:400px;box-shadow: 0 10px 25px rgba(0,0,0,0.1);}
 .fld{margin-bottom:.9rem;}
 .fld label{display:block;font-size:11px;color:var(--text2);margin-bottom:3px;font-weight:600;}
 .fld input, .fld select{width:100%;font-size:13px;padding:8px;border:1px solid var(--border);border-radius:8px;}
@@ -72,10 +72,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <body>
 
 <div id="lp" class="login-page" style="display:flex; align-items:center; justify-content:center; height:100vh;">
-  <div style="text-align:center; background:white; padding:30px; border-radius:14px; border:1px solid #ddd;">
+  <div style="text-align:center; background:white; padding:30px; border-radius:14px; border:1px solid #ddd; box-shadow: var(--sh);">
     <h1>Gestor de Tarefas</h1>
     <p style="margin:15px 0; color:#666;">Engenharia de Qualidade</p>
-    <button class="btn p" onclick="iniciarLogin()">Entrar com Google</button>
+    <button class="btn p" onclick="iniciarLogin()">Entrar no Sistema</button>
   </div>
 </div>
 
@@ -96,35 +96,174 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <div class="add-box">
       <div class="add-row">
-        <input type="text" id="ti" placeholder="Nova tarefa (ex: RNC 371)..."/>
+        <input type="text" id="ti" placeholder="Nova tarefa de obra ou qualidade..."/>
         <input type="date" id="td"/>
         <button class="btn p" onclick="addTask()">+ Adicionar</button>
       </div>
     </div>
 
-    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3);">KANBAN</div>
+    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase;">Kanban por Prazo</div>
     <div class="kanban">
-      <div class="col"><div class="col-h"><span class="cname">Atrasado</span></div><div id="cl"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Hoje</span></div><div id="ch"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Curto Prazo</span></div><div id="cs"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Futuro</span></div><div id="cf"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Atrasado</span></div><div id="cl" class="qb"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Hoje</span></div><div id="ch" class="qb"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Curto Prazo</span></div><div id="cs" class="qb"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Futuro</span></div><div id="cf" class="qb"></div></div>
     </div>
 
-    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3);">MATRIZ DE EISENHOWER</div>
+    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase;">Matriz de Eisenhower</div>
     <div class="ei-grid">
-      <div class="quad q1"><div class="qh"><div class="qbadge">Q1</div><span>Fazer Agora</span></div><div id="e1"></div></div>
-      <div class="quad q2"><div class="qh"><div class="qbadge">Q2</div><span>Agendar</span></div><div id="e2"></div></div>
-      <div class="quad q3"><div class="qh"><div class="qbadge">Q3</div><span>Delegar</span></div><div id="e3"></div></div>
-      <div class="quad q4"><div class="qh"><div class="qbadge">Q4</div><span>Eliminar</span></div><div id="e4"></div></div>
+      <div class="quad q1"><div class="qh"><div class="qbadge">Q1</div><span>Fazer Agora</span></div><div id="e1" class="qb"></div></div>
+      <div class="quad q2"><div class="qh"><div class="qbadge">Q2</div><span>Agendar</span></div><div id="e2" class="qb"></div></div>
+      <div class="quad q3"><div class="qh"><div class="qbadge">Q3</div><span>Delegar</span></div><div id="e3" class="qb"></div></div>
+      <div class="quad q4"><div class="qh"><div class="qbadge">Q4</div><span>Eliminar</span></div><div id="e4" class="qb"></div></div>
     </div>
   </div>
 </div>
 
 <div class="mo" id="mo">
   <div class="mdl">
-    <h3 style="margin-bottom:15px;">Editar Tarefa</h3>
-    <div class="fld"><label>Título</label><input type="text" id="et"/></div>
-    <div class="fld"><label>Data</label><input type="date" id="ed"/></div>
+    <h3 style="margin-bottom:15px;">Editar Registro</h3>
+    <div class="fld"><label>Descrição</label><input type="text" id="et"/></div>
+    <div class="fld"><label>Prazo</label><input type="date" id="ed"/></div>
     <div class="fld">
-      <label>Quadrante</label>
+      <label>Quadrante da Matriz</label>
       <select id="eq">
+        <option value="Q1">Q1 - Urgente + Importante</option>
+        <option value="Q2">Q2 - Importante (Agendar)</option>
+        <option value="Q3">Q3 - Urgente (Delegar)</option>
+        <option value="Q4">Q4 - Baixo Impacto</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+      <button class="btn" onclick="fecharModal()" style="border:1px solid #ddd; background:none; cursor:pointer; padding:8px 15px; border-radius:8px;">Cancelar</button>
+      <button class="btn p" onclick="salvarEdicao()">Atualizar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WORKER='https://gestor-tarefas-ia.hildernandiosousa.workers.dev';
+let tasks=[], nId=1, taskEditando=null;
+
+const tds = () => {
+    const d = new Date();
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split("T")[0];
+};
+
+async function classificar(t) {
+    const hoje = tds();
+    try {
+        const prompt = `Classifique para engenharia: {"priority":"alta"|"media","quad":"Q1"|"Q2"|"Q3"} Tarefa: "${t.title}"`;
+        const resp = await fetch(WORKER, { 
+            method: 'POST', 
+            body: JSON.stringify({messages: [{role: 'user', content: prompt}]}),
+            headers: {'Content-Type': 'application/json'}
+        });
+        const data = await resp.json();
+        const res = JSON.parse(data.content[0].text.replace(/```json|```/g, ''));
+        if(t.date && t.date <= hoje) res.quad = "Q1";
+        Object.assign(t, res);
+    } catch (e) {
+        // Trava de segurança: Se a IA falhar, o código decide pela data
+        t.quad = (t.date && t.date <= hoje) ? "Q1" : "Q2";
+        t.priority = (t.quad === "Q1") ? "alta" : "media";
+    }
+}
+
+async function addTask() {
+    const tit = document.getElementById('ti').value;
+    const dat = document.getElementById('td').value;
+    if(!tit) return;
+    const nova = {id: nId++, title: tit, date: dat || null, done: false, priority: 'media', quad: 'Q2'};
+    tasks.push(nova);
+    document.getElementById('ti').value = '';
+    document.getElementById('td').value = '';
+    await classificar(nova);
+    render();
+}
+
+function render() {
+    const hoje = tds();
+    const cont = { cl:[], ch:[], cs:[], cf:[], e1:[], e2:[], e3:[], e4:[] };
+    
+    tasks.forEach(t => {
+        if(t.done) return;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="ctit">${t.title}</div>
+            <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                <span class="tag ${t.priority || 'media'}">${t.priority || 'média'}</span>
+                <span style="font-size:9px; color:#888;">📅 ${t.date ? t.date.split('-').reverse().slice(0,2).join('/') : 'S/D'}</span>
+                <div style="margin-left:auto; display:flex; gap:4px;">
+                  <button onclick="marcarFeito(${t.id})" title="Concluir" style="cursor:pointer; border:1px solid #ddd; background:#fff; border-radius:4px; padding:2px 5px;">✓</button>
+                  <button onclick="abrirModal(${t.id})" title="Editar" style="cursor:pointer; border:1px solid #ddd; background:#fff; border-radius:4px; padding:2px 5px;">✎</button>
+                  <button onclick="excluirTarefa(${t.id})" title="Excluir" style="cursor:pointer; border:1px solid #fcebeb; background:#fff; color:red; border-radius:4px; padding:2px 5px;">✕</button>
+                </div>
+            </div>`;
+
+        if(!t.date) cont.cf.push(card);
+        else if(t.date < hoje) cont.cl.push(card);
+        else if(t.date === hoje) cont.ch.push(card);
+        else cont.cs.push(card);
+
+        const qId = 'e' + (t.quad ? t.quad.charAt(1) : '2');
+        if(cont[qId]) cont[qId].push(card.cloneNode(true));
+    });
+
+    for(let id in cont) {
+        const el = document.getElementById(id);
+        if(el) { el.innerHTML = ''; cont[id].forEach(c => el.appendChild(c)); }
+    }
+    atualizarStats();
+}
+
+function abrirModal(id) {
+    const t = tasks.find(x => x.id === id);
+    if(!t) return;
+    taskEditando = t;
+    document.getElementById('et').value = t.title;
+    document.getElementById('ed').value = t.date || '';
+    document.getElementById('eq').value = t.quad || 'Q2';
+    document.getElementById('mo').classList.add('open');
+}
+
+function fecharModal() { document.getElementById('mo').classList.remove('open'); }
+
+function salvarEdicao() {
+    if(!taskEditando) return;
+    taskEditando.title = document.getElementById('et').value;
+    taskEditando.date = document.getElementById('ed').value;
+    taskEditando.quad = document.getElementById('eq').value;
+    fecharModal();
+    render();
+}
+
+function excluirTarefa(id) {
+    if(confirm('Excluir este registro?')) {
+        tasks = tasks.filter(t => t.id !== id);
+        render();
+    }
+}
+
+function marcarFeito(id) {
+    const t = tasks.find(x => x.id === id);
+    if(t) t.done = true;
+    render();
+}
+
+function atualizarStats() {
+    const pend = tasks.filter(t => !t.done);
+    document.getElementById('s-tot').innerText = tasks.length;
+    document.getElementById('s-pen').innerText = pend.length;
+    document.getElementById('s-don').innerText = tasks.length - pend.length;
+    document.getElementById('s-lat').innerText = pend.filter(t => t.date && t.date < tds()).length;
+}
+
+function iniciarLogin() { 
+    document.getElementById('lp').style.display='none'; 
+    document.getElementById('app').style.display='block'; 
+}
+</script>
+</body>
+</html>
