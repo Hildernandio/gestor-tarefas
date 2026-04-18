@@ -216,7 +216,7 @@ const CID='1066728571322-s75qo7i98v1ents71ao8gkdnfk0t3jnf.apps.googleusercontent
 const SCOPES='https://www.googleapis.com/auth/drive.file';
 const FN='tarefas_kanban_ia.json';
 const DISC='https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-const WORKER='https://gestor-tarefas-ia.hildernandiosousa.workers.dev';
+// IA local — sem necessidade de Worker externo
 
 let tc,gI=false,gsI=false;
 let tasks=[],nId=1,fId=null,svT=null,eid=null;
@@ -334,52 +334,60 @@ function schSave(){clearTimeout(svT);svT=setTimeout(()=>save(),1500);}
 function forceSave(){save();}
 function forceLoad(){load();}
 
-async function chamarIA(prompt){
-  const resp=await fetch(WORKER,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      model:'claude-haiku-4-5',
-      max_tokens:600,
-      messages:[{role:'user',content:prompt}]
-    })
-  });
-  if(!resp.ok)throw new Error('Worker HTTP '+resp.status);
-  const data=await resp.json();
-  if(data.error)throw new Error(data.error);
-  const txt=data.content?.map(b=>b.text||'').join('')||'';
-  // Robust JSON extraction
-  const clean=txt.replace(/```json|```/g,'').trim();
-  // Find first { or [
-  const s1=clean.indexOf('{'), s2=clean.indexOf('[');
-  let start=-1;
-  if(s1>=0&&s2>=0)start=Math.min(s1,s2);
-  else if(s1>=0)start=s1;
-  else if(s2>=0)start=s2;
-  if(start<0)throw new Error('No JSON found: '+clean.slice(0,100));
-  // Find matching end
-  const slice=clean.slice(start);
-  return JSON.parse(slice);
+function classificarLocal(t){
+  const title=(t.title||'').toLowerCase();
+  const date=t.date||'';
+  const today=tds();
+  const isAtrasado=date&&date<today;
+  const isHoje=date===today;
+  const isCurtoPrazo=date&&date>today&&date<=sl();
+
+  // Detectar categoria por palavras-chave
+  let category='Geral';
+  if(/rnc|qualidade|inspe|nc|procedimento|protocolo|comission|revisão|revisar|evidência/i.test(title))category='Qualidade';
+  else if(/obra|constru|alinha|bha|sdb|parque|drenagem|vala|rmt|espuma/i.test(title))category='Obras';
+  else if(/equipe|treinamento|reunião|equipe|kleiton|colaborador/i.test(title))category='Equipe';
+  else if(/médico|exame|saúde|carro|revisão do carro|pessoal|compra|celular|notebook|passagem/i.test(title))category='Pessoal';
+  else if(/estudo|curso|aprender|capacit/i.test(title))category='Estudos';
+  else if(/compra|lista|adquir|comprar/i.test(title))category='Compras';
+  else if(/planejamento|planilha|módulo|atualizar|plan/i.test(title))category='Planejamento';
+
+  // Detectar urgência e importância
+  const isUrgente=isAtrasado||isHoje||/urgente|imediato|hoje|agora|prazo|cliente|risco|ncr|rnc|evidência/i.test(title);
+  const isImportante=category==='Qualidade'||category==='Obras'||category==='Equipe'||
+    /importante|crítico|segurança|entrega|cliente|comission|procedimento|protocolo|rmt/i.test(title);
+  const isPessoal=category==='Pessoal'||category==='Compras';
+
+  let quad,priority,suggestion,delegate=null;
+
+  if(isUrgente&&isImportante){
+    quad='Q1';priority='alta';
+    suggestion='Resolver hoje — tarefa urgente e importante';
+  } else if(!isUrgente&&isImportante){
+    quad='Q2';priority='media';
+    if(isHoje||isCurtoPrazo)suggestion='Agendar para esta semana';
+    else suggestion='Planejar e executar com foco';
+  } else if(isUrgente&&isPessoal){
+    quad='Q3';priority='media';
+    suggestion='Delegar ou resolver rapidamente';
+    delegate='Assistente ou familiar';
+  } else if(isUrgente&&!isImportante){
+    quad='Q3';priority='media';
+    suggestion='Delegar se possível';
+    delegate='Outro membro da equipe';
+  } else {
+    quad='Q4';priority='baixa';
+    suggestion='Avaliar se realmente necessário';
+  }
+
+  // Ajuste por prazo
+  if(isAtrasado&&quad!=='Q1'){quad='Q1';priority='alta';suggestion='Atrasado — resolver com urgência!';}
+
+  t.priority=priority;t.category=category;t.quad=quad;t.suggestion=suggestion;t.delegate=delegate;
 }
 
 async function classificar(t){
-  try{
-    const res=await chamarIA(
-      `Especialista em gestão do tempo para engenheiros/gestores de obras. Retorne APENAS JSON sem markdown:\n`+
-      `{"priority":"alta"|"media"|"baixa","category":"<Qualidade|Obras|Equipe|Pessoal|Estudos|Compras|Planejamento>","quad":"Q1"|"Q2"|"Q3"|"Q4","suggestion":"<ação em 1 frase>","delegate":"<quem assumiria se Q3, senão null>"}\n\n`+
-      `Q1=Urgente+Importante|Q2=NãoUrgente+Importante|Q3=Urgente+NãoImportante|Q4=NãoUrgente+NãoImportante\n\n`+
-      `Tarefa: "${t.title}"${t.date?' (prazo:'+t.date+')':''}`
-    );
-    t.priority=res.priority||'media';
-    t.category=res.category||null;
-    t.quad=res.quad||'Q2';
-    t.suggestion=res.suggestion||null;
-    t.delegate=res.delegate||null;
-  }catch(e){
-    console.error('IA erro:',e.message);
-    t.priority='media';t.quad='Q2';
-    t.suggestion='[IA offline] Classificar manualmente: '+e.message.slice(0,40);
-  }
+  classificarLocal(t);
 }
 
 async function addTask(){
