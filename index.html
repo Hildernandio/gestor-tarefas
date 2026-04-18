@@ -37,32 +37,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .add-row input[type=text]{flex:1;min-width:180px;font-size:14px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;outline:none;}
 .add-row input[type=date]{font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;width:150px;}
-.btn.p{background:var(--accent);color:#fff;border-color:var(--accent);cursor:pointer;padding:9px 16px;border-radius:8px;}
+.btn.p{background:var(--accent);color:#fff;border-color:var(--accent);cursor:pointer;padding:9px 16px;border-radius:8px;font-weight:600;}
 
 .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem;}
 .col{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;}
 .col-h{padding:9px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);background:#fafafa;}
 .cname{font-size:12px;font-weight:600;}
 
-.card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px;margin:5px;transition: transform 0.1s;}
-.card:hover{box-shadow: 0 4px 12px rgba(0,0,0,0.05);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px;margin:5px;box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
 .ctit{font-size:12px;line-height:1.4;margin-bottom:8px;color:var(--text);font-weight:500;}
-.tag{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;}
+.tag{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;margin-right:4px;}
 .tag.alta{background:var(--red-bg);color:var(--red);}
 .tag.media{background:var(--amber-bg);color:var(--amber);}
 .tag.baixa{background:var(--green-bg);color:var(--green);}
-.tag.q1{background:var(--red-bg);color:var(--red);border:1px solid var(--red);}
 
 .ei-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.quad{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);min-height:200px;}
+.quad{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);min-height:220px;}
 .qh{padding:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
 .qbadge{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;}
 .q1 .qbadge{background:var(--red-bg);color:var(--red);}
 .q2 .qbadge{background:var(--blue-bg);color:var(--blue);}
 
-/* Login Page */
 .login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;}
-.lcard{background:white;padding:2rem;border-radius:var(--rl);border:1px solid var(--border);text-align:center;box-shadow:var(--sh);}
+.lcard{background:white;padding:2.5rem;border-radius:var(--rl);border:1px solid var(--border);text-align:center;box-shadow:var(--sh);max-width:350px;}
 
 @media(max-width:768px){ .kanban, .ei-grid, .stats-row { grid-template-columns: 1fr; } }
 </style>
@@ -71,8 +68,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div id="lp" class="login-page">
   <div class="lcard">
-    <h1>Gestor de Tarefas</h1>
-    <p style="margin:15px 0; color:var(--text2)">Sincronização com Google Drive</p>
+    <h1 style="font-size: 1.2rem;">Gestor de Tarefas</h1>
+    <p style="margin:15px 0; color:var(--text2); font-size: 14px;">Controle de Qualidade e Obras</p>
     <button class="btn p" onclick="iniciarLogin()">Entrar com Google</button>
   </div>
 </div>
@@ -94,37 +91,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <div class="add-box">
       <div class="add-row">
-        <input type="text" id="ti" placeholder="Descreva a tarefa de engenharia..."/>
+        <input type="text" id="ti" placeholder="Nova tarefa (ex: RNC 371)..."/>
         <input type="date" id="td"/>
         <button class="btn p" onclick="addTask()">+ Adicionar</button>
       </div>
     </div>
 
-    <div style="margin-bottom:10px; font-size:11px; font-weight:bold; color:var(--text3)">KANBAN</div>
+    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3); letter-spacing: 0.5px;">KANBAN POR PRAZO</div>
     <div class="kanban">
-      <div class="col"><div class="col-h"><span class="cname">Atrasado</span> <span id="kl">0</span></div><div id="cl"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Hoje</span> <span id="kh">0</span></div><div id="ch"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Curto Prazo</span> <span id="ks">0</span></div><div id="cs"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Futuro</span> <span id="kf">0</span></div><div id="cf"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Atrasado</span></div><div id="cl"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Hoje</span></div><div id="ch"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Curto Prazo</span></div><div id="cs"></div></div>
+      <div class="col"><div class="col-h"><span class="cname">Futuro</span></div><div id="cf"></div></div>
     </div>
 
-    <div style="margin-bottom:10px; font-size:11px; font-weight:bold; color:var(--text3)">MATRIZ DE EISENHOWER</div>
+    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3); letter-spacing: 0.5px;">MATRIZ DE EISENHOWER</div>
     <div class="ei-grid">
-      <div class="quad q1"><div class="qh"><div class="qbadge">Q1</div><span>Fazer Agora</span></div><div id="e1"></div></div>
-      <div class="quad q2"><div class="qh"><div class="qbadge">Q2</div><span>Agendar</span></div><div id="e2"></div></div>
+      <div class="quad q1"><div class="qh"><div class="qbadge">Q1</div><span style="font-size:12px; font-weight:600;">Fazer Agora (Urgente)</span></div><div id="e1"></div></div>
+      <div class="quad q2"><div class="qh"><div class="qbadge">Q2</div><span style="font-size:12px; font-weight:600;">Agendar (Importante)</span></div><div id="e2"></div></div>
     </div>
   </div>
 </div>
 
 <script>
 const CID='1066728571322-s75qo7i98v1ents71ao8gkdnfk0t3jnf.apps.googleusercontent.com';
-const SCOPES='https://www.googleapis.com/auth/drive.file';
-const FN='tarefas_kanban_ia.json';
 const WORKER='https://gestor-tarefas-ia.hildernandiosousa.workers.dev';
 
-let tasks=[], nId=1, fId=null, tc;
+let tasks=[], nId=1;
 
-// CORREÇÃO: Fuso horário brasileiro para comparação de datas
+// Ajuste para Fuso Horário do Brasil [cite: 59]
 const tds = () => {
     const d = new Date();
     return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split("T")[0];
@@ -133,7 +128,7 @@ const tds = () => {
 async function classificar(t) {
     const hoje = tds();
     try {
-        const prompt = `Classifique para engenharia solar: {"priority":"alta"|"media"|"baixa","quad":"Q1"|"Q2"|"Q3"|"Q4"} Tarefa: "${t.title}"`;
+        const prompt = `Classifique: {"priority":"alta"|"media"|"baixa","quad":"Q1"|"Q2"} Tarefa: "${t.title}"`;
         const resp = await fetch(WORKER, {
             method: 'POST',
             body: JSON.stringify({messages: [{role: 'user', content: prompt}]})
@@ -141,14 +136,14 @@ async function classificar(t) {
         const data = await resp.json();
         const res = JSON.parse(data.content[0].text.replace(/```json|```/g, ''));
         
-        // FORÇAR Q1 se estiver atrasado ou for para hoje
+        // FORÇAR Q1: Regra de Urgência (Hoje ou Atrasado) [cite: 11, 18, 63, 64]
         if(t.date && t.date <= hoje) {
             res.quad = "Q1";
             res.priority = "alta";
         }
         Object.assign(t, res);
     } catch (e) {
-        // Fallback robusto
+        // Fallback Local [cite: 18, 21, 35, 64, 81]
         t.quad = (t.date && t.date <= hoje) ? "Q1" : "Q2";
         t.priority = (t.quad === "Q1") ? "alta" : "media";
     }
@@ -158,44 +153,46 @@ async function addTask() {
     const tit = document.getElementById('ti').value;
     const dat = document.getElementById('td').value;
     if(!tit) return;
-    const nova = {id: nId++, title: tit, date: dat || null, done: false};
+    const nova = {id: nId++, title: tit, date: dat || null, done: false, priority: 'media', quad: 'Q2'};
     tasks.push(nova);
     document.getElementById('ti').value = '';
+    document.getElementById('td').value = '';
     await classificar(nova);
     render();
-    save();
 }
 
 function render() {
     const hoje = tds();
-    const containers = { cl:[], ch:[], cs:[], cf:[], e1:[], e2:[] };
+    const cont = { cl:[], ch:[], cs:[], cf:[], e1:[], e2:[] };
     
     tasks.forEach(t => {
         if(t.done) return;
         const card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = `<div class="ctit">${t.title}</div>
-                          <span class="tag ${t.priority}">${t.priority}</span>
-                          <span class="tag ${t.quad.toLowerCase()}">${t.quad}</span>
-                          <div style="font-size:9px; margin-top:5px">${t.date || 'S/D'}</div>
-                          <button onclick="marcarFeito(${t.id})" style="margin-top:5px; cursor:pointer">✓</button>`;
+        card.innerHTML = `
+            <div class="ctit">${t.title}</div>
+            <div style="display:flex; align-items:center;">
+                <span class="tag ${t.priority}">${t.priority}</span>
+                <span style="font-size:10px; color:#888;">📅 ${t.date ? t.date.split('-').reverse().slice(0,2).join('/') : 'S/D'}</span>
+                <button onclick="marcarFeito(${t.id})" style="margin-left:auto; border:1px solid #ddd; background:none; cursor:pointer; border-radius:4px; padding:2px 6px;">✓</button>
+            </div>`;
 
-        // Lógica Kanban
-        if(!t.date) containers.cf.push(card);
-        else if(t.date < hoje) containers.cl.push(card);
-        else if(t.date === hoje) containers.ch.push(card);
-        else containers.cs.push(card);
+        // Lógica Kanban [cite: 17, 18, 37, 46]
+        if(!t.date) cont.cf.push(card);
+        else if(t.date < hoje) cont.cl.push(card);
+        else if(t.date === hoje) cont.ch.push(card);
+        else cont.cs.push(card);
 
-        // Lógica Matriz
-        if(t.quad === 'Q1') containers.e1.push(card.cloneNode(true));
-        else if(t.quad === 'Q2') containers.e2.push(card.cloneNode(true));
+        // Lógica Matriz [cite: 62, 64, 81]
+        if(t.quad === 'Q1') cont.e1.push(card.cloneNode(true));
+        else cont.e2.push(card.cloneNode(true));
     });
 
-    for(let id in containers) {
+    for(let id in cont) {
         const el = document.getElementById(id);
         if(el) {
             el.innerHTML = '';
-            containers[id].forEach(c => el.appendChild(c));
+            cont[id].forEach(c => el.appendChild(c));
         }
     }
     atualizarStats();
@@ -205,19 +202,16 @@ function marcarFeito(id) {
     const t = tasks.find(x => x.id === id);
     if(t) t.done = true;
     render();
-    save();
 }
 
 function atualizarStats() {
-    const pendentes = tasks.filter(t => !t.done);
+    const pend = tasks.filter(t => !t.done);
     document.getElementById('s-tot').innerText = tasks.length;
-    document.getElementById('s-pen').innerText = pendentes.length;
-    document.getElementById('s-don').innerText = tasks.length - pendentes.length;
-    document.getElementById('s-lat').innerText = pendentes.filter(t => t.date && t.date < tds()).length;
+    document.getElementById('s-pen').innerText = pend.length;
+    document.getElementById('s-don').innerText = tasks.length - pend.length;
+    document.getElementById('s-lat').innerText = pend.filter(t => t.date && t.date < tds()).length;
 }
 
-// Funções de Inicialização e Google Drive omitidas por brevidade, 
-// mas devem seguir o padrão de autenticação que você já possui.
 function iniciarLogin() { 
     document.getElementById('lp').style.display='none'; 
     document.getElementById('app').style.display='block'; 
