@@ -1,169 +1,31 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gestor de Tarefas - Engenharia</title>
-<style>
-:root{
-  --bg:#f4f4f0;--surface:#fff;--surface2:#f0efea;--border:#e2e1da;
-  --text:#1a1a18;--text2:#444442;--text3:#9b9b96;--accent:#1a1a18;
-  --green:#2d6a2d;--green-bg:#eaf3ea;--red:#a32d2d;--red-bg:#fcebeb;
-  --amber:#854f0b;--amber-bg:#faeeda;--blue:#185fa5;--blue-bg:#e6f1fb;
-  --r:10px;--rl:14px;--sh:0 1px 3px rgba(0,0,0,0.08);
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.navbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;height:54px;position:sticky;top:0;z-index:50;gap:12px;}
-.nav-logo{font-size:15px;font-weight:600;letter-spacing:-0.3px;}
-.nav-logo span{color:var(--text3);}
-.nav-sync{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);margin-left:auto;}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
-.sdot.syncing{background:#ba7517;animation:pulse 1s infinite;}
-.sdot.error{background:var(--red);}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.nav-out{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text3);cursor:pointer;margin-left:8px;}
-.nav-out:hover{background:var(--surface2);}
-
-.main{padding:1.2rem 1.5rem;max-width:1140px;margin:0 auto;}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.1rem;}
-.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;box-shadow:var(--sh);}
-.sl{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
-.sv{font-size:22px;font-weight:700;}
-.sc.red .sv{color:var(--red);}
-.sc.green .sv{color:var(--green);}
-
-.add-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem;margin-bottom:1.2rem;box-shadow:var(--sh);}
-.add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-.add-row input[type=text]{flex:1;min-width:180px;font-size:14px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;outline:none;}
-.add-row input[type=date]{font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;width:150px;}
-.btn.p{background:var(--accent);color:#fff;border-color:var(--accent);cursor:pointer;padding:9px 16px;border-radius:8px;font-weight:600;}
-
-.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem;}
-.col{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;}
-.col-h{padding:9px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);background:#fafafa;}
-.cname{font-size:12px;font-weight:600;}
-
-.card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px;margin:5px;box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
-.ctit{font-size:12px;line-height:1.4;margin-bottom:8px;color:var(--text);font-weight:500;}
-.tag{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;margin-right:4px;}
-.tag.alta{background:var(--red-bg);color:var(--red);}
-.tag.media{background:var(--amber-bg);color:var(--amber);}
-.tag.baixa{background:var(--green-bg);color:var(--green);}
-
-.ei-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.quad{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);min-height:220px;}
-.qh{padding:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-.qbadge{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;}
-.q1 .qbadge{background:var(--red-bg);color:var(--red);}
-.q2 .qbadge{background:var(--blue-bg);color:var(--blue);}
-
-.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;}
-.lcard{background:white;padding:2.5rem;border-radius:var(--rl);border:1px solid var(--border);text-align:center;box-shadow:var(--sh);max-width:350px;}
-
-@media(max-width:768px){ .kanban, .ei-grid, .stats-row { grid-template-columns: 1fr; } }
-</style>
-</head>
-<body>
-
-<div id="lp" class="login-page">
-  <div class="lcard">
-    <h1 style="font-size: 1.2rem;">Gestor de Tarefas</h1>
-    <p style="margin:15px 0; color:var(--text2); font-size: 14px;">Controle de Qualidade e Obras</p>
-    <button class="btn p" onclick="iniciarLogin()">Entrar com Google</button>
+<div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3); letter-spacing: 0.5px;">MATRIZ DE EISENHOWER COMPLETA</div>
+<div class="ei-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 10px;">
+  <div class="quad q1"><div class="qh"><div class="qbadge" style="background:var(--red-bg); color:var(--red);">Q1</div><span style="font-size:12px; font-weight:600;">Fazer Agora</span></div><div id="e1"></div></div>
+  
+  <div class="quad q2"><div class="qh"><div class="qbadge" style="background:var(--blue-bg); color:var(--blue);">Q2</div><span style="font-size:12px; font-weight:600;">Agendar</span></div><div id="e2"></div></div>
+  
+  <div class="quad q3" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--rl); min-height:150px;">
+    <div class="qh" style="padding:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+      <div class="qbadge" style="background:var(--amber-bg); color:var(--amber); width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold;">Q3</div>
+      <span style="font-size:12px; font-weight:600;">Delegar</span>
+    </div>
+    <div id="e3"></div>
   </div>
-</div>
-
-<div id="app" style="display:none;">
-  <nav class="navbar">
-    <span class="nav-logo">Gestor <span>Tarefas</span></span>
-    <div class="nav-sync"><div class="sdot" id="sdot"></div><span id="stxt">Sincronizado</span></div>
-    <button class="nav-out" onclick="logout()">Sair</button>
-  </nav>
-
-  <div class="main">
-    <div class="stats-row">
-      <div class="sc"><div class="sl">Total</div><div class="sv" id="s-tot">0</div></div>
-      <div class="sc red"><div class="sl">Atrasadas</div><div class="sv" id="s-lat">0</div></div>
-      <div class="sc"><div class="sl">Pendentes</div><div class="sv" id="s-pen">0</div></div>
-      <div class="sc green"><div class="sl">Concluídas</div><div class="sv" id="s-don">0</div></div>
+  
+  <div class="quad q4" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--rl); min-height:150px;">
+    <div class="qh" style="padding:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+      <div class="qbadge" style="background:var(--surface2); color:var(--text3); width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold;">Q4</div>
+      <span style="font-size:12px; font-weight:600;">Eliminar</span>
     </div>
-
-    <div class="add-box">
-      <div class="add-row">
-        <input type="text" id="ti" placeholder="Nova tarefa (ex: RNC 371)..."/>
-        <input type="date" id="td"/>
-        <button class="btn p" onclick="addTask()">+ Adicionar</button>
-      </div>
-    </div>
-
-    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3); letter-spacing: 0.5px;">KANBAN POR PRAZO</div>
-    <div class="kanban">
-      <div class="col"><div class="col-h"><span class="cname">Atrasado</span></div><div id="cl"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Hoje</span></div><div id="ch"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Curto Prazo</span></div><div id="cs"></div></div>
-      <div class="col"><div class="col-h"><span class="cname">Futuro</span></div><div id="cf"></div></div>
-    </div>
-
-    <div style="margin-bottom:10px; font-size:11px; font-weight:700; color:var(--text3); letter-spacing: 0.5px;">MATRIZ DE EISENHOWER</div>
-    <div class="ei-grid">
-      <div class="quad q1"><div class="qh"><div class="qbadge">Q1</div><span style="font-size:12px; font-weight:600;">Fazer Agora (Urgente)</span></div><div id="e1"></div></div>
-      <div class="quad q2"><div class="qh"><div class="qbadge">Q2</div><span style="font-size:12px; font-weight:600;">Agendar (Importante)</span></div><div id="e2"></div></div>
-    </div>
+    <div id="e4"></div>
   </div>
 </div>
 
 <script>
-const CID='1066728571322-s75qo7i98v1ents71ao8gkdnfk0t3jnf.apps.googleusercontent.com';
-const WORKER='https://gestor-tarefas-ia.hildernandiosousa.workers.dev';
-
-let tasks=[], nId=1;
-
-// Ajuste para Fuso Horário do Brasil [cite: 59]
-const tds = () => {
-    const d = new Date();
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split("T")[0];
-};
-
-async function classificar(t) {
-    const hoje = tds();
-    try {
-        const prompt = `Classifique: {"priority":"alta"|"media"|"baixa","quad":"Q1"|"Q2"} Tarefa: "${t.title}"`;
-        const resp = await fetch(WORKER, {
-            method: 'POST',
-            body: JSON.stringify({messages: [{role: 'user', content: prompt}]})
-        });
-        const data = await resp.json();
-        const res = JSON.parse(data.content[0].text.replace(/```json|```/g, ''));
-        
-        // FORÇAR Q1: Regra de Urgência (Hoje ou Atrasado) [cite: 11, 18, 63, 64]
-        if(t.date && t.date <= hoje) {
-            res.quad = "Q1";
-            res.priority = "alta";
-        }
-        Object.assign(t, res);
-    } catch (e) {
-        // Fallback Local [cite: 18, 21, 35, 64, 81]
-        t.quad = (t.date && t.date <= hoje) ? "Q1" : "Q2";
-        t.priority = (t.quad === "Q1") ? "alta" : "media";
-    }
-}
-
-async function addTask() {
-    const tit = document.getElementById('ti').value;
-    const dat = document.getElementById('td').value;
-    if(!tit) return;
-    const nova = {id: nId++, title: tit, date: dat || null, done: false, priority: 'media', quad: 'Q2'};
-    tasks.push(nova);
-    document.getElementById('ti').value = '';
-    document.getElementById('td').value = '';
-    await classificar(nova);
-    render();
-}
-
+// Atualize a função render para distribuir nos 4 quadrantes
 function render() {
     const hoje = tds();
-    const cont = { cl:[], ch:[], cs:[], cf:[], e1:[], e2:[] };
+    const cont = { cl:[], ch:[], cs:[], cf:[], e1:[], e2:[], e3:[], e4:[] };
     
     tasks.forEach(t => {
         if(t.done) return;
@@ -171,20 +33,21 @@ function render() {
         card.className = 'card';
         card.innerHTML = `
             <div class="ctit">${t.title}</div>
-            <div style="display:flex; align-items:center;">
-                <span class="tag ${t.priority}">${t.priority}</span>
-                <span style="font-size:10px; color:#888;">📅 ${t.date ? t.date.split('-').reverse().slice(0,2).join('/') : 'S/D'}</span>
-                <button onclick="marcarFeito(${t.id})" style="margin-left:auto; border:1px solid #ddd; background:none; cursor:pointer; border-radius:4px; padding:2px 6px;">✓</button>
+            <div style="display:flex; align-items:center; gap:5px;">
+                <span class="tag ${t.priority || 'media'}">${t.priority || 'média'}</span>
+                <span style="font-size:9px; color:var(--text3);">📅 ${t.date ? t.date.split('-').reverse().slice(0,2).join('/') : 'S/D'}</span>
+                <button onclick="marcarFeito(${t.id})" style="margin-left:auto; cursor:pointer; border:none; background:none;">✓</button>
             </div>`;
 
-        // Lógica Kanban [cite: 17, 18, 37, 46]
+        // Lógica Kanban (Mantida)
         if(!t.date) cont.cf.push(card);
         else if(t.date < hoje) cont.cl.push(card);
         else if(t.date === hoje) cont.ch.push(card);
         else cont.cs.push(card);
 
-        // Lógica Matriz [cite: 62, 64, 81]
-        if(t.quad === 'Q1') cont.e1.push(card.cloneNode(true));
+        // Lógica da Matriz Corrigida
+        const qKey = t.quad ? t.quad.toLowerCase() : 'e2';
+        if (cont[qKey]) cont[qKey].push(card.cloneNode(true));
         else cont.e2.push(card.cloneNode(true));
     });
 
@@ -197,25 +60,4 @@ function render() {
     }
     atualizarStats();
 }
-
-function marcarFeito(id) {
-    const t = tasks.find(x => x.id === id);
-    if(t) t.done = true;
-    render();
-}
-
-function atualizarStats() {
-    const pend = tasks.filter(t => !t.done);
-    document.getElementById('s-tot').innerText = tasks.length;
-    document.getElementById('s-pen').innerText = pend.length;
-    document.getElementById('s-don').innerText = tasks.length - pend.length;
-    document.getElementById('s-lat').innerText = pend.filter(t => t.date && t.date < tds()).length;
-}
-
-function iniciarLogin() { 
-    document.getElementById('lp').style.display='none'; 
-    document.getElementById('app').style.display='block'; 
-}
 </script>
-</body>
-</html>
