@@ -216,7 +216,6 @@ const CID='1066728571322-s75qo7i98v1ents71ao8gkdnfk0t3jnf.apps.googleusercontent
 const SCOPES='https://www.googleapis.com/auth/drive.file';
 const FN='tarefas_kanban_ia.json';
 const DISC='https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-// IA local — sem necessidade de Worker externo
 
 let tc,gI=false,gsI=false;
 let tasks=[],nId=1,fId=null,svT=null,eid=null;
@@ -334,60 +333,44 @@ function schSave(){clearTimeout(svT);svT=setTimeout(()=>save(),1500);}
 function forceSave(){save();}
 function forceLoad(){load();}
 
-function classificarLocal(t){
-  const title=(t.title||'').toLowerCase();
-  const date=t.date||'';
-  const today=tds();
-  const isAtrasado=date&&date<today;
-  const isHoje=date===today;
-  const isCurtoPrazo=date&&date>today&&date<=sl();
-
-  // Detectar categoria por palavras-chave
-  let category='Geral';
-  if(/rnc|qualidade|inspe|nc|procedimento|protocolo|comission|revisão|revisar|evidência/i.test(title))category='Qualidade';
-  else if(/obra|constru|alinha|bha|sdb|parque|drenagem|vala|rmt|espuma/i.test(title))category='Obras';
-  else if(/equipe|treinamento|reunião|equipe|kleiton|colaborador/i.test(title))category='Equipe';
-  else if(/médico|exame|saúde|carro|revisão do carro|pessoal|compra|celular|notebook|passagem/i.test(title))category='Pessoal';
-  else if(/estudo|curso|aprender|capacit/i.test(title))category='Estudos';
-  else if(/compra|lista|adquir|comprar/i.test(title))category='Compras';
-  else if(/planejamento|planilha|módulo|atualizar|plan/i.test(title))category='Planejamento';
-
-  // Detectar urgência e importância
-  const isUrgente=isAtrasado||isHoje||/urgente|imediato|hoje|agora|prazo|cliente|risco|ncr|rnc|evidência/i.test(title);
-  const isImportante=category==='Qualidade'||category==='Obras'||category==='Equipe'||
-    /importante|crítico|segurança|entrega|cliente|comission|procedimento|protocolo|rmt/i.test(title);
-  const isPessoal=category==='Pessoal'||category==='Compras';
-
-  let quad,priority,suggestion,delegate=null;
-
-  if(isUrgente&&isImportante){
-    quad='Q1';priority='alta';
-    suggestion='Resolver hoje — tarefa urgente e importante';
-  } else if(!isUrgente&&isImportante){
-    quad='Q2';priority='media';
-    if(isHoje||isCurtoPrazo)suggestion='Agendar para esta semana';
-    else suggestion='Planejar e executar com foco';
-  } else if(isUrgente&&isPessoal){
-    quad='Q3';priority='media';
-    suggestion='Delegar ou resolver rapidamente';
-    delegate='Assistente ou familiar';
-  } else if(isUrgente&&!isImportante){
-    quad='Q3';priority='media';
-    suggestion='Delegar se possível';
-    delegate='Outro membro da equipe';
-  } else {
-    quad='Q4';priority='baixa';
-    suggestion='Avaliar se realmente necessário';
-  }
-
-  // Ajuste por prazo
-  if(isAtrasado&&quad!=='Q1'){quad='Q1';priority='alta';suggestion='Atrasado — resolver com urgência!';}
-
-  t.priority=priority;t.category=category;t.quad=quad;t.suggestion=suggestion;t.delegate=delegate;
-}
+const WORKER='https://gestor-tarefas-ia.hildernandiosousa.workers.dev';
 
 async function classificar(t){
-  classificarLocal(t);
+  try{
+    const prompt=`Você é especialista em gestão do tempo para engenheiros e gestores de obras de construção civil/petróleo. Analise a tarefa e retorne APENAS um objeto JSON válido sem markdown nem explicação:
+{"priority":"alta"|"media"|"baixa","category":"Qualidade"|"Obras"|"Equipe"|"Pessoal"|"Estudos"|"Compras"|"Planejamento","quad":"Q1"|"Q2"|"Q3"|"Q4","suggestion":"<ação recomendada em 1 frase>","delegate":"<quem poderia assumir se Q3, senão null>"}
+
+Q1=Urgente+Importante|Q2=NãoUrgente+Importante|Q3=Urgente+NãoImportante|Q4=NãoUrgente+NãoImportante
+
+Tarefa: "${t.title}"${t.date?' (prazo:'+t.date+')':''}`;
+    const resp=await fetch(WORKER,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:prompt}]})
+    });
+    if(!resp.ok)throw new Error('Worker '+resp.status);
+    const data=await resp.json();
+    const txt=data.content?.[0]?.text||'';
+    const clean=txt.replace(/```json|```/g,'').trim();
+    const start=Math.max(clean.indexOf('{'),0);
+    const res=JSON.parse(clean.slice(start));
+    t.priority=res.priority||'media';
+    t.category=res.category||'Geral';
+    t.quad=res.quad||'Q2';
+    t.suggestion=res.suggestion||null;
+    t.delegate=res.delegate||null;
+  }catch(e){
+    console.error('Gemini erro:',e.message);
+    // Fallback local simples
+    const title=(t.title||'').toLowerCase();
+    const isAtrasado=t.date&&t.date<tds();
+    if(/rnc|qualidade|procedimento|comission|evidência|rmt|protocolo/i.test(title)){t.category='Qualidade';t.quad=isAtrasado?'Q1':'Q1';t.priority='alta';}
+    else if(/obra|bha|sdb|drenagem|vala|alinha/i.test(title)){t.category='Obras';t.quad='Q1';t.priority='alta';}
+    else if(/equipe|treinamento/i.test(title)){t.category='Equipe';t.quad='Q2';t.priority='media';}
+    else if(/médico|exame|carro|compra|celular|notebook|passagem|filho/i.test(title)){t.category='Pessoal';t.quad=isAtrasado?'Q1':'Q3';t.priority=isAtrasado?'alta':'media';t.delegate='Familiar ou assistente';}
+    else{t.category='Geral';t.quad=isAtrasado?'Q1':'Q2';t.priority=isAtrasado?'alta':'media';}
+    t.suggestion=isAtrasado?'Atrasado — resolver urgente!':'Verificar prioridade manualmente';
+  }
 }
 
 async function addTask(){
