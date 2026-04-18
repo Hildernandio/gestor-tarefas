@@ -348,9 +348,18 @@ async function chamarIA(prompt){
   const data=await resp.json();
   if(data.error)throw new Error(data.error);
   const txt=data.content?.map(b=>b.text||'').join('')||'';
-  const match=txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-  if(!match)throw new Error('JSON não encontrado');
-  return JSON.parse(match[0]);
+  // Robust JSON extraction
+  const clean=txt.replace(/```json|```/g,'').trim();
+  // Find first { or [
+  const s1=clean.indexOf('{'), s2=clean.indexOf('[');
+  let start=-1;
+  if(s1>=0&&s2>=0)start=Math.min(s1,s2);
+  else if(s1>=0)start=s1;
+  else if(s2>=0)start=s2;
+  if(start<0)throw new Error('No JSON found: '+clean.slice(0,100));
+  // Find matching end
+  const slice=clean.slice(start);
+  return JSON.parse(slice);
 }
 
 async function classificar(t){
@@ -367,9 +376,9 @@ async function classificar(t){
     t.suggestion=res.suggestion||null;
     t.delegate=res.delegate||null;
   }catch(e){
-    console.error('IA:',e.message);
+    console.error('IA erro:',e.message);
     t.priority='media';t.quad='Q2';
-    t.suggestion='Classificar manualmente.';
+    t.suggestion='[IA offline] Classificar manualmente: '+e.message.slice(0,40);
   }
 }
 
